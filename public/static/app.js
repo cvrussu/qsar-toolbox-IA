@@ -24,10 +24,17 @@ class QSARChatbot {
         // Limpiar input y deshabilitar botón
         this.chatInput.value = '';
         this.sendButton.disabled = true;
-        this.sendButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Procesando...';
+        this.sendButton.innerHTML = `
+            <i class="fas fa-brain mr-2"></i>
+            <span class="ai-thinking">Analizando</span>
+        `;
+        this.sendButton.classList.add('loading-shimmer');
 
         // Añadir mensaje del usuario
         this.addMessage('user', message);
+        
+        // Añadir indicador de procesamiento
+        this.addProcessingIndicator();
 
         try {
             // Enviar consulta a la API
@@ -47,16 +54,20 @@ class QSARChatbot {
                 'error'
             );
         } finally {
+            // Remover indicador de procesamiento
+            this.removeProcessingIndicator();
+            
             // Rehabilitar botón
             this.sendButton.disabled = false;
-            this.sendButton.innerHTML = '<i class="fas fa-paper-plane mr-1"></i>Enviar';
+            this.sendButton.classList.remove('loading-shimmer');
+            this.sendButton.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Analizar';
             this.chatInput.focus();
         }
     }
 
     addMessage(type, content, variant = 'default') {
         const messageDiv = document.createElement('div');
-        messageDiv.className = 'flex items-start space-x-3';
+        messageDiv.className = 'flex items-start space-x-4 message-enter';
         
         const isUser = type === 'user';
         const timestamp = new Date().toLocaleTimeString('es-ES', { 
@@ -64,24 +75,33 @@ class QSARChatbot {
             minute: '2-digit' 
         });
 
-        let avatarClass, bubbleClass;
+        let avatarClass, bubbleClass, iconClass;
         
         if (isUser) {
-            avatarClass = 'bg-green-100 text-green-600';
-            bubbleClass = 'bg-green-50 ml-auto';
+            avatarClass = 'avatar avatar-user';
+            bubbleClass = 'message-bubble message-user';
+            iconClass = 'fas fa-user';
             messageDiv.className += ' justify-end';
         } else {
-            avatarClass = variant === 'error' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600';
-            bubbleClass = variant === 'error' ? 'bg-red-50' : 'bg-blue-50';
+            avatarClass = 'avatar avatar-assistant';
+            bubbleClass = variant === 'error' ? 'message-bubble message-error' : 
+                         variant === 'warning' ? 'message-bubble message-warning' : 
+                         'message-bubble message-assistant';
+            iconClass = variant === 'error' ? 'fas fa-exclamation-triangle' : 
+                       variant === 'warning' ? 'fas fa-exclamation-circle' : 
+                       'fas fa-brain';
         }
 
         messageDiv.innerHTML = `
-            <div class="${avatarClass} rounded-full p-2 w-8 h-8 flex items-center justify-center text-sm">
-                <i class="fas fa-${isUser ? 'user' : variant === 'error' ? 'exclamation-triangle' : 'robot'}"></i>
+            <div class="${avatarClass} w-12 h-12 flex items-center justify-center text-lg text-white flex-shrink-0">
+                <i class="${iconClass}"></i>
             </div>
-            <div class="${bubbleClass} rounded-lg p-3 max-w-md">
-                <div class="prose prose-sm">${this.formatMessage(content)}</div>
-                <div class="text-xs text-gray-500 mt-1">${timestamp}</div>
+            <div class="${bubbleClass} p-4 max-w-2xl">
+                <div class="prose prose-sm max-w-none">${this.formatMessage(content)}</div>
+                <div class="text-xs opacity-70 mt-2 flex items-center">
+                    <i class="fas fa-clock mr-1"></i>
+                    ${timestamp}
+                </div>
             </div>
         `;
 
@@ -90,21 +110,53 @@ class QSARChatbot {
     }
 
     addValidationError(suggestions, examples) {
-        let content = '⚠️ **Tu consulta necesita más detalles**:\n\n';
+        let content = `
+            <div class="space-y-4">
+                <div class="glass-panel p-4 rounded-lg">
+                    <h3 class="text-lg font-bold text-orange-600 mb-2 flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        Consulta Incompleta
+                    </h3>
+                    <p class="text-gray-700">Tu consulta necesita más información específica para el análisis QSAR.</p>
+                </div>
+        `;
         
         if (suggestions) {
-            content += '**Sugerencias:**\n';
+            content += `
+                <div class="space-y-2">
+                    <h4 class="font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                        Sugerencias de mejora:
+                    </h4>
+                    <ul class="space-y-1 pl-6">
+            `;
             suggestions.forEach(suggestion => {
-                content += `• ${suggestion}\n`;
+                content += `<li class="text-sm text-gray-700">• ${suggestion}</li>`;
             });
+            content += '</ul></div>';
         }
 
         if (examples) {
-            content += '\n**Ejemplos válidos:**\n';
+            content += `
+                <div class="space-y-2">
+                    <h4 class="font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-examples text-blue-500 mr-2"></i>
+                        Ejemplos válidos:
+                    </h4>
+                    <div class="space-y-2">
+            `;
             examples.forEach(example => {
-                content += `• "${example}"\n`;
+                content += `
+                    <div class="chemical-formula p-2 cursor-pointer hover:bg-blue-50 rounded" 
+                         onclick="setExample('${example}')">
+                        "${example}"
+                    </div>
+                `;
             });
+            content += '</div></div>';
         }
+
+        content += '</div>';
 
         this.addMessage('assistant', content, 'warning');
     }
@@ -123,59 +175,101 @@ class QSARChatbot {
 
     addResultsCards(results, substance) {
         const resultsDiv = document.createElement('div');
-        resultsDiv.className = 'mt-4 space-y-3';
+        resultsDiv.className = 'endpoints-grid mt-6';
 
-        results.forEach(result => {
+        results.forEach((result, index) => {
             const confidence = (result.prediction.confidence * 100).toFixed(0);
-            const riskColor = this.getRiskColor(result.prediction.category);
+            const riskClass = this.getRiskClass(result.prediction.category);
             const riskIcon = this.getRiskIcon(result.prediction.category);
 
             const card = document.createElement('div');
-            card.className = `bg-white border-l-4 ${riskColor} p-4 rounded-r-lg shadow-sm`;
+            card.className = `toxicity-card ${riskClass} result-enter`;
+            card.style.animationDelay = `${index * 0.1}s`;
             
             card.innerHTML = `
-                <div class="flex items-center justify-between mb-2">
-                    <h4 class="font-semibold text-gray-800">
-                        ${riskIcon} ${result.endpoint}
-                    </h4>
-                    <span class="text-xs bg-gray-100 px-2 py-1 rounded-full">
-                        Confianza: ${confidence}%
-                    </span>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="font-bold text-gray-800 text-lg flex items-center">
+                            ${riskIcon}
+                            <span class="ml-2">${result.endpoint}</span>
+                        </h4>
+                        <div class="confidence-indicator" style="--confidence-width: ${confidence}%">
+                            <span class="relative z-10 text-xs font-bold">
+                                ${confidence}% confianza
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="glass-panel p-3 rounded-lg">
+                            <p class="text-sm font-medium text-gray-700">
+                                <i class="fas fa-flask mr-2 text-blue-500"></i>
+                                <strong>Predicción:</strong> 
+                                <span class="chemical-formula ml-2">
+                                    ${result.prediction.value} ${result.prediction.unit || ''}
+                                </span>
+                            </p>
+                        </div>
+                        
+                        <div class="text-sm text-gray-700">
+                            <p>${result.regulatory_relevance_es}</p>
+                        </div>
+                        
+                        <details class="group">
+                            <summary class="cursor-pointer text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center">
+                                <i class="fas fa-microscope mr-2"></i>
+                                Explicación Técnica
+                                <i class="fas fa-chevron-down ml-2 transform group-open:rotate-180 transition-transform"></i>
+                            </summary>
+                            <div class="mt-3 p-3 glass-panel rounded-lg">
+                                <p class="text-xs text-gray-600 leading-relaxed">
+                                    ${result.explanation_es}
+                                </p>
+                                ${result.similar_substances && result.similar_substances.length > 0 ? `
+                                    <div class="mt-2 pt-2 border-t border-gray-200">
+                                        <p class="text-xs font-medium text-gray-700 mb-1">
+                                            <i class="fas fa-atom mr-1"></i>
+                                            Sustancias similares:
+                                        </p>
+                                        <div class="flex flex-wrap gap-1">
+                                            ${result.similar_substances.map(sub => 
+                                                `<span class="chemical-formula text-xs">${sub}</span>`
+                                            ).join('')}
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </details>
+                    </div>
                 </div>
-                <div class="text-sm text-gray-700">
-                    <p><strong>Valor:</strong> ${result.prediction.value} ${result.prediction.unit || ''}</p>
-                    <p class="mt-1">${result.regulatory_relevance_es}</p>
-                </div>
-                <details class="mt-2">
-                    <summary class="text-xs text-blue-600 cursor-pointer hover:underline">
-                        Ver explicación técnica
-                    </summary>
-                    <p class="text-xs text-gray-600 mt-1 pl-4">${result.explanation_es}</p>
-                </details>
             `;
 
             resultsDiv.appendChild(card);
         });
 
-        // Botón para generar reporte PDF
+        // Botón para generar reporte PDF con diseño moderno
         const pdfButton = document.createElement('button');
-        pdfButton.className = 'w-full mt-3 bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg text-sm transition-colors';
-        pdfButton.innerHTML = '<i class="fas fa-file-pdf mr-2"></i>Generar Reporte PDF';
+        pdfButton.className = 'btn-primary w-full mt-6 py-4 text-lg font-semibold';
+        pdfButton.innerHTML = `
+            <i class="fas fa-file-contract mr-3"></i>
+            Generar Reporte Científico PDF
+            <i class="fas fa-download ml-3"></i>
+        `;
         pdfButton.onclick = () => this.generatePDFReport(results, substance);
         
         resultsDiv.appendChild(pdfButton);
 
-        // Añadir las tarjetas al chat
+        // Añadir las tarjetas al chat con avatar científico
         const messageDiv = document.createElement('div');
-        messageDiv.className = 'flex justify-start';
+        messageDiv.className = 'flex items-start space-x-4 message-enter';
         messageDiv.innerHTML = `
-            <div class="bg-blue-100 text-blue-600 rounded-full p-2 w-8 h-8 flex items-center justify-center text-sm mr-3">
-                <i class="fas fa-chart-bar"></i>
+            <div class="avatar avatar-assistant w-12 h-12 flex items-center justify-center text-lg text-white flex-shrink-0">
+                <i class="fas fa-chart-line"></i>
             </div>
         `;
         
         const contentDiv = document.createElement('div');
-        contentDiv.className = 'max-w-lg';
+        contentDiv.className = 'flex-1 max-w-full';
         contentDiv.appendChild(resultsDiv);
         messageDiv.appendChild(contentDiv);
 
@@ -209,13 +303,13 @@ class QSARChatbot {
         }
     }
 
-    getRiskColor(category) {
+    getRiskClass(category) {
         switch (category) {
-            case 'very_high': return 'border-red-500';
-            case 'high': return 'border-orange-500';
-            case 'moderate': return 'border-yellow-500';
-            case 'low': return 'border-green-500';
-            default: return 'border-gray-500';
+            case 'very_high': return 'risk-very-high';
+            case 'high': return 'risk-high';
+            case 'moderate': return 'risk-moderate';
+            case 'low': return 'risk-low';
+            default: return 'risk-low';
         }
     }
 
@@ -236,6 +330,36 @@ class QSARChatbot {
             .replace(/\*(.*?)\*/g, '<em>$1</em>')
             .replace(/\n/g, '<br>')
             .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-blue-600 hover:underline">$1</a>');
+    }
+
+    addProcessingIndicator() {
+        const processingDiv = document.createElement('div');
+        processingDiv.className = 'flex items-start space-x-4 processing-indicator';
+        processingDiv.innerHTML = `
+            <div class="avatar avatar-assistant w-12 h-12 flex items-center justify-center text-lg text-white flex-shrink-0">
+                <i class="fas fa-brain fa-pulse"></i>
+            </div>
+            <div class="message-bubble message-assistant p-4">
+                <div class="flex items-center space-x-3">
+                    <div class="loading-shimmer w-4 h-4 rounded-full"></div>
+                    <span class="text-gray-600">Procesando análisis QSAR...</span>
+                </div>
+                <div class="mt-2 text-xs text-gray-500">
+                    <i class="fas fa-microscope mr-1"></i>
+                    Aplicando modelos de machine learning
+                </div>
+            </div>
+        `;
+        
+        this.chatMessages.appendChild(processingDiv);
+        this.scrollToBottom();
+    }
+
+    removeProcessingIndicator() {
+        const indicator = this.chatMessages.querySelector('.processing-indicator');
+        if (indicator) {
+            indicator.remove();
+        }
     }
 
     scrollToBottom() {

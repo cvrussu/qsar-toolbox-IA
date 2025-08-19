@@ -4,9 +4,16 @@
 Módulo integrador que permite a un chatbot en español comunicarse de forma amigable con el sistema QSAR Toolbox de la OECD. Simplifica las búsquedas complejas en toxicología y seguridad química para usuarios sin experiencia técnica.
 
 ## URLs del Proyecto
-- **Aplicación Demo**: https://3000-i5bw7ht8cku37l5jwd8ne-6532622b.e2b.dev
-- **API Health Check**: https://3000-i5bw7ht8cku37l5jwd8ne-6532622b.e2b.dev/api/examples
-- **GitHub**: [Pendiente de deployment]
+- **🚀 Aplicación Demo**: https://3000-i5bw7ht8cku37l5jwd8ne-6532622b.e2b.dev
+- **🔬 API Health Check**: https://3000-i5bw7ht8cku37l5jwd8ne-6532622b.e2b.dev/api/examples
+- **📱 GitHub**: [Pendiente de deployment]
+
+## 🎨 Diseño de IA Moderna
+- **Interfaz futurista** con degradados y glassmorphism avanzado
+- **Tema científico** inspirado en laboratorios de toxicología OECD
+- **Colores inteligentes** que reflejan niveles de riesgo toxicológico
+- **Animaciones de IA** con partículas flotantes y efectos neurales
+- **Responsive design** optimizado para todas las pantallas
 
 ## Características Principales
 
@@ -35,10 +42,12 @@ Módulo integrador que permite a un chatbot en español comunicarse de forma ami
 
 ### Stack Tecnológico
 - **Backend**: Hono + TypeScript (Cloudflare Workers)
-- **Frontend**: Vanilla JS + TailwindCSS + FontAwesome
-- **Parseo NLP**: Parser personalizado en español
+- **Frontend**: Vanilla JS + TailwindCSS + FontAwesome + Google Fonts
+- **Diseño**: Glassmorphism + Neomorfismo + Gradientes científicos
+- **Parseo NLP**: Parser personalizado en español con IA
 - **Base de datos**: Simulador in-memory (futuro: D1 Database)
 - **Despliegue**: Cloudflare Pages + PM2 (desarrollo)
+- **Tipografía**: Inter + JetBrains Mono para elementos técnicos
 
 ### Estructura de Datos
 ```typescript

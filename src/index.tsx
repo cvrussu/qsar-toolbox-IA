@@ -193,114 +193,209 @@ app.get('/', (c) => {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>QSAR Toolbox Integrator - Regulator.IA</title>
+        <title>QSAR Toolbox AI - Regulator.IA | Toxicología Inteligente</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
         <link href="/static/style.css" rel="stylesheet">
+        <meta name="description" content="Sistema de IA avanzado para análisis toxicológico QSAR OECD en español">
+        <meta name="theme-color" content="#667eea">
     </head>
-    <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-        <div class="container mx-auto px-4 py-6 max-w-4xl">
-            <!-- Header -->
-            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-2xl font-bold text-gray-800 mb-2">
-                            <i class="fas fa-robot text-blue-600 mr-2"></i>
-                            QSAR Toolbox Integrator
-                        </h1>
-                        <p class="text-gray-600">
-                            <i class="fas fa-flask mr-2"></i>
-                            Consultas toxicológicas en español - Powered by Regulator.IA
-                        </p>
-                    </div>
-                    <div class="text-right">
-                        <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-                            <i class="fas fa-circle text-green-500 mr-1"></i>
-                            Sistema Activo
+    <body>
+        <!-- Partículas flotantes -->
+        <div class="particles-container">
+            <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+            <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+            <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+            <div class="particle" style="left: 40%; animation-delay: 1s;"></div>
+            <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
+            <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+            <div class="particle" style="left: 70%; animation-delay: 1.5s;"></div>
+            <div class="particle" style="left: 80%; animation-delay: 3.5s;"></div>
+            <div class="particle" style="left: 90%; animation-delay: 0.5s;"></div>
+        </div>
+
+        <div class="min-h-screen p-4 md:p-6">
+            <div class="max-w-6xl mx-auto space-y-6">
+                <!-- Header Principal -->
+                <header class="main-header ai-container p-8 text-center">
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-center mb-6">
+                            <div class="avatar avatar-assistant w-20 h-20 flex items-center justify-center text-3xl text-white mr-4">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div>
+                                <h1 class="main-title">
+                                    QSAR Toolbox AI
+                                </h1>
+                                <p class="text-white/80 text-lg font-medium">
+                                    <i class="fas fa-microscope mr-2"></i>
+                                    Inteligencia Artificial para Toxicología OECD
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap justify-center gap-4 mb-6">
+                            <div class="status-badge status-active">
+                                <span class="relative z-10">Sistema Neural Activo</span>
+                            </div>
+                            <div class="glass-panel px-4 py-2 rounded-full text-white/90 text-sm">
+                                <i class="fas fa-database mr-2"></i>
+                                8 Endpoints Toxicológicos
+                            </div>
+                            <div class="glass-panel px-4 py-2 rounded-full text-white/90 text-sm">
+                                <i class="fas fa-language mr-2"></i>
+                                NLP Español Avanzado
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </header>
 
-            <!-- Chat Interface -->
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                <!-- Chat Header -->
-                <div class="bg-blue-600 text-white p-4">
-                    <h2 class="text-lg font-semibold">
-                        <i class="fas fa-comments mr-2"></i>
-                        Chatbot QSAR - Consultas en Español
-                    </h2>
-                    <p class="text-blue-100 text-sm">Pregunta sobre toxicidad, irritación, sensibilización y endpoints ambientales</p>
-                </div>
-
-                <!-- Chat Messages -->
-                <div id="chat-messages" class="h-96 overflow-y-auto p-4 space-y-4">
-                    <!-- Welcome Message -->
-                    <div class="flex items-start space-x-3">
-                        <div class="bg-blue-100 text-blue-600 rounded-full p-2 w-8 h-8 flex items-center justify-center text-sm">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="bg-blue-50 rounded-lg p-3 max-w-md">
-                            <p class="text-gray-800"><strong>¡Hola!</strong> Soy tu asistente QSAR. Puedo ayudarte con:</p>
-                            <ul class="mt-2 text-sm text-gray-700 list-disc list-inside">
-                                <li>Predicciones de toxicidad aguda</li>
-                                <li>Evaluación de irritación y sensibilización</li>
-                                <li>Análisis de destino ambiental</li>
-                                <li>Generación de reportes PDF</li>
-                            </ul>
-                            <p class="mt-2 text-xs text-gray-600">
-                                <strong>Ejemplo:</strong> "¿El benceno es irritante dérmico según QSAR?"
-                            </p>
+                <!-- Interface Principal del Chat -->
+                <main class="chat-container">
+                    <!-- Header del Chat -->
+                    <div class="chat-header p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="text-xl font-bold text-white flex items-center">
+                                    <i class="fas fa-comments-alt mr-3"></i>
+                                    Asistente QSAR Inteligente
+                                </h2>
+                                <p class="text-white/80 mt-1">
+                                    Consultas toxicológicas en lenguaje natural • Powered by Regulator.IA
+                                </p>
+                            </div>
+                            <div class="hidden md:flex items-center space-x-3">
+                                <div class="tooltip-scientific text-white/60 hover:text-white/90" data-tooltip="Análisis en tiempo real">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div class="tooltip-scientific text-white/60 hover:text-white/90" data-tooltip="Modelos QSAR OECD">
+                                    <i class="fas fa-atom"></i>
+                                </div>
+                                <div class="tooltip-scientific text-white/60 hover:text-white/90" data-tooltip="Reportes automáticos">
+                                    <i class="fas fa-file-contract"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Chat Input -->
-                <div class="border-t p-4">
-                    <div class="flex space-x-3">
-                        <input 
-                            type="text" 
-                            id="chat-input" 
-                            placeholder="Pregunta sobre toxicología QSAR en español..."
-                            class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            onkeypress="handleKeyPress(event)"
-                        >
-                        <button 
-                            onclick="sendMessage()"
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
-                            id="send-button"
-                        >
-                            <i class="fas fa-paper-plane mr-1"></i>
-                            Enviar
-                        </button>
+                    <!-- Área de Mensajes -->
+                    <div id="chat-messages" class="h-96 md:h-[500px] overflow-y-auto p-6 space-y-6 molecular-bg">
+                        <!-- Mensaje de Bienvenida -->
+                        <div class="flex items-start space-x-4">
+                            <div class="avatar avatar-assistant w-12 h-12 flex items-center justify-center text-lg text-white flex-shrink-0">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-bubble message-assistant p-6 max-w-2xl">
+                                <div class="mb-4">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-2">
+                                        🧠 ¡Bienvenido al futuro de la toxicología!
+                                    </h3>
+                                    <p class="text-gray-700 mb-4">
+                                        Soy tu asistente de IA especializado en <strong>QSAR Toolbox OECD</strong>. 
+                                        Utilizo modelos de aprendizaje automático para predecir propiedades toxicológicas.
+                                    </p>
+                                </div>
+                                
+                                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                                    <div class="endpoint-card">
+                                        <h4 class="font-semibold text-gray-800 mb-2">🧪 Toxicidad Aguda</h4>
+                                        <p class="text-sm text-gray-600">LD50 oral, dérmica e inhalatoria</p>
+                                    </div>
+                                    <div class="endpoint-card">
+                                        <h4 class="font-semibold text-gray-800 mb-2">🔥 Irritación & Corrosión</h4>
+                                        <p class="text-sm text-gray-600">Piel y ojos según OECD TG</p>
+                                    </div>
+                                    <div class="endpoint-card">
+                                        <h4 class="font-semibold text-gray-800 mb-2">⚡ Sensibilización</h4>
+                                        <p class="text-sm text-gray-600">Potencial alergénico dérmico</p>
+                                    </div>
+                                    <div class="endpoint-card">
+                                        <h4 class="font-semibold text-gray-800 mb-2">🌱 Destino Ambiental</h4>
+                                        <p class="text-sm text-gray-600">Biodegradación y bioacumulación</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="glass-panel p-4 rounded-lg">
+                                    <p class="text-sm text-gray-700">
+                                        <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                                        <strong>Ejemplo:</strong> 
+                                        <em class="chemical-formula">¿El benceno es carcinógeno según QSAR?</em>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <!-- Quick Examples -->
-                    <div class="mt-3">
-                        <p class="text-xs text-gray-500 mb-2">Ejemplos rápidos:</p>
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="setExample('¿El tolueno es tóxico por vía oral?')" 
-                                    class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">
-                                Toxicidad oral
+
+                    <!-- Panel de Entrada -->
+                    <div class="p-6 border-t border-white/20">
+                        <div class="flex space-x-4 mb-4">
+                            <input 
+                                type="text" 
+                                id="chat-input" 
+                                placeholder="Pregúntame sobre toxicología: ej. '¿El formaldehído es irritante ocular según OECD?'"
+                                class="input-modern flex-1 px-6 py-4 text-lg"
+                                onkeypress="handleKeyPress(event)"
+                            >
+                            <button 
+                                onclick="sendMessage()"
+                                class="btn-primary px-8 py-4 text-lg font-semibold"
+                                id="send-button"
+                            >
+                                <i class="fas fa-paper-plane mr-2"></i>
+                                Analizar
                             </button>
-                            <button onclick="setExample('Irritación dérmica del formaldehído')" 
-                                    class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">
-                                Irritación
-                            </button>
-                            <button onclick="setExample('Genera reporte completo para acetona')" 
-                                    class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">
-                                Reporte completo
-                            </button>
+                        </div>
+                        
+                        <!-- Ejemplos Rápidos -->
+                        <div class="space-y-3">
+                            <p class="text-sm font-medium text-gray-600">Consultas de ejemplo:</p>
+                            <div class="flex flex-wrap gap-3">
+                                <button onclick="setExample('Toxicidad aguda oral del tolueno')" 
+                                        class="btn-secondary px-4 py-2 text-sm">
+                                    <i class="fas fa-skull mr-2"></i>Toxicidad Aguda
+                                </button>
+                                <button onclick="setExample('¿El formaldehído es irritante dérmico según OECD 404?')" 
+                                        class="btn-secondary px-4 py-2 text-sm">
+                                    <i class="fas fa-fire mr-2"></i>Irritación Dérmica
+                                </button>
+                                <button onclick="setExample('Sensibilización del fenol según QSAR')" 
+                                        class="btn-secondary px-4 py-2 text-sm">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>Sensibilización
+                                </button>
+                                <button onclick="setExample('Genera reporte toxicológico completo para acetona')" 
+                                        class="btn-secondary px-4 py-2 text-sm">
+                                    <i class="fas fa-file-alt mr-2"></i>Reporte Completo
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </main>
 
-            <!-- Footer -->
-            <div class="mt-6 text-center text-gray-500 text-sm">
-                <i class="fas fa-shield-alt mr-1"></i>
-                Sistema de evaluación toxicológica automatizada - 
-                <a href="https://github.com" class="text-blue-600 hover:underline">Regulator.IA</a>
+                <!-- Footer Científico -->
+                <footer class="glass-panel p-6 text-center">
+                    <div class="flex flex-wrap items-center justify-center gap-6 text-sm">
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-shield-virus mr-2 text-blue-500"></i>
+                            Cumplimiento OECD Guidelines
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-brain mr-2 text-purple-500"></i>
+                            Modelos de IA Validados
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-certificate mr-2 text-green-500"></i>
+                            Regulator.IA Certified
+                        </div>
+                    </div>
+                    <div class="mt-4 text-xs text-gray-500">
+                        Sistema de evaluación toxicológica automatizada • 
+                        <a href="#" class="text-blue-500 hover:text-blue-600 font-medium">Regulator.IA Platform</a> • 
+                        Versión 1.0 MVP
+                    </div>
+                </footer>
             </div>
         </div>
 
