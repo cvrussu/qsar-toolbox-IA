@@ -1,8 +1,8 @@
 body {
     font-family: 'Lato', sans-serif;
     margin: 0;
-    background-color: #f4f7f6;
-    color: #333;
+    background-color: #121212;
+    color: #e0e0e0;
 }
 
 .container {
@@ -17,8 +17,8 @@ body {
 
 .header {
     grid-area: header;
-    background-color: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
+    background-color: #1e1e1e;
+    border-bottom: 1px solid #333;
     display: flex;
     align-items: center;
     padding: 0 20px;
@@ -27,13 +27,12 @@ body {
 .header h1 {
     margin: 0;
     font-size: 1.5em;
-    color: #2A6EAF;
+    color: #29ABE2;
 }
 
 .sidebar {
     grid-area: sidebar;
-    background-color: #ffffff;
-    border-right: 1px solid #e0e0e0;
+    background: linear-gradient(135deg, #4F00BC, #29ABE2);
     padding: 20px;
 }
 
@@ -47,23 +46,25 @@ body {
     display: block;
     padding: 10px 15px;
     text-decoration: none;
-    color: #333;
+    color: #ffffff;
     border-radius: 5px;
     margin-bottom: 5px;
+    transition: background-color 0.3s;
 }
 
 .sidebar ul li a:hover {
-    background-color: #f4f7f6;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar ul li a.active {
-    background-color: #2A6EAF;
-    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: bold;
 }
 
 .main-content {
     grid-area: main;
     padding: 20px;
+    overflow-y: auto;
 }
 
 .dashboard {
@@ -73,15 +74,15 @@ body {
 }
 
 .card {
-    background-color: #ffffff;
+    background-color: #1e1e1e;
     border-radius: 8px;
     padding: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #333;
 }
 
 .card h3 {
     margin-top: 0;
-    color: #2A6EAF;
+    color: #29ABE2;
 }
 
 .data-input-form label {
@@ -92,10 +93,12 @@ body {
 .data-input-form input {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #333;
     border-radius: 4px;
     margin-bottom: 10px;
     box-sizing: border-box;
+    background-color: #2c2c2c;
+    color: #e0e0e0;
 }
 
 .data-input-form button {
@@ -103,14 +106,15 @@ body {
     padding: 10px;
     border: none;
     border-radius: 4px;
-    background-color: #2A6EAF;
+    background: linear-gradient(135deg, #4F00BC, #29ABE2);
     color: white;
     font-size: 1em;
     cursor: pointer;
+    transition: opacity 0.3s;
 }
 
 .data-input-form button:hover {
-    background-color: #245e9a;
+    opacity: 0.9;
 }
 
 .recent-projects {
@@ -125,7 +129,7 @@ body {
 
 .recent-projects a {
     text-decoration: none;
-    color: #337ab7;
+    color: #8ab4f8; /* A lighter blue for links */
 }
 
 .recent-projects a:hover {
