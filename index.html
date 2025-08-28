@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QSAR Toolbox IA</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>QSAR Toolbox IA</h1>
+        </header>
+        <nav class="sidebar">
+            <ul>
+                <li><a href="#" class="active">Inicio</a></li>
+                <li><a href="#">Entrada de Datos</a></li>
+                <li><a href="#">Perfilado</a></li>
+                <li><a href="#">Agrupación</a></li>
+                <li><a href="#">Reportes</a></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            <div class="dashboard">
+                <div class="card">
+                    <h3>Nueva Simulación</h3>
+                    <form class="data-input-form">
+                        <label for="chemical-input">Introducir nombre del químico, SMILES, o número CAS:</label>
+                        <input type="text" id="chemical-input" name="chemical-input" placeholder="Ej: Benzene, C6H6, 71-43-2">
+                        <button type="submit">Iniciar Análisis</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>Proyectos Recientes</h3>
+                    <ul class="recent-projects">
+                        <li><a href="#">Análisis de Aspirina - 2025-08-27</a></li>
+                        <li><a href="#">Estudio de Toxicidad de Etanol - 2025-08-26</a></li>
+                        <li><a href="#">Evaluación de Paracetamol - 2025-08-25</a></li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
